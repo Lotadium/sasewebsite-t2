@@ -672,23 +672,40 @@
     document.getElementById('mobileMenu').classList.toggle('open');
   });
 
+   var JOIN_FORM_ENDPOINT = "https://script.google.com/macros/s/AKfycbzxCSOEv2qUxSjUk-8alPbjjZw3-k1sxHCbltqtdpgy41yf9KnWJHtoLZSFs8GBUKfF/exec";
+ 
   document.getElementById('joinSubmit').addEventListener('click', function() {
     var name = document.getElementById('fName').value.trim();
     var email = document.getElementById('fEmail').value.trim();
-    if (name && email) {
+    var major = document.getElementById('fMajor').value.trim();
+    var year = document.getElementById('fYear').value;
+    var reason = document.getElementById('fReason').value.trim();
+ 
+    if (!name || !email) return;
+ 
+    var submitBtn = document.getElementById('joinSubmit');
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitting...";
+ 
+    fetch(JOIN_FORM_ENDPOINT, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ name: name, email: email, major: major, year: year, reason: reason })
+    }).finally(function() {
       document.getElementById('joinForm').style.display = 'none';
       document.getElementById('joinSuccessText').textContent =
         "Thanks for your interest, " + name.split(' ')[0] + ". We'll be in touch soon with details on our next meeting.";
       document.getElementById('joinSuccess').classList.add('show');
-    }
+    });
   });
-
+ 
   document.getElementById('copyrightYear').textContent =
     '© ' + new Date().getFullYear() + ' Sac State SASE. All rights reserved.';
-
+ 
   // set initial nav active state
   navigate('home');
 </script>
-
+ 
 </body>
 </html>
